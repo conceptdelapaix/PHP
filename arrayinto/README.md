@@ -16,15 +16,15 @@ $obj->array_object = array("AAA" => "1111",
 					 
 					 );
 
-echo "<h1>Array into table</h1>";					 
+# Array into table					 
 $result = $obj->process_table();
-echo "<pre>"; print_r($result); echo "<hr />";
+print_r($result);
 
-echo "<h1>Array into div</h1>";					 
+# Array into div				 
 $result = $obj->process_div();
-echo "<pre>"; print_r($result); echo "<hr />";
+print_r($result);
 
-echo "<h1>JSON into div/table</h1>";	
+# JSON into div/table
 $obj->json_string = '{
 				"AAA":"11111",
 				"BBB":"22222",
@@ -39,7 +39,7 @@ $obj->json_string = '{
              }
             ';
 $result = $obj->process_json();
-echo "<pre>"; print_r($result); echo "<hr />";
+print_r($result);
 $result = $obj->process_json('div');
-echo "<pre>"; print_r($result); echo "<hr />";
-</pre>
+print_r($result);
+
