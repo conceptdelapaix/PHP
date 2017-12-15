@@ -1,0 +1,110 @@
+# Connect PHP with MS SQL 
+
+# Window Authentication (LOCAL PC)
+
+$serverName     = ".\SQLSERVER2012";  
+$connectionInfo = array( "Database"=>"msdb"
+                       );  
+
+/* Connect using Windows Authentication. */  
+$conn = sqlsrv_connect( $serverName, $connectionInfo);  
+if( $conn === false )  
+{  
+     echo "Unable to connect.</br><pre>";  
+     die( print_r( sqlsrv_errors(), true));  
+}  
+else
+{
+	//print_r($conn);
+	echo "You have connected to MS SQL server database";
+}
+
+
+
+
+
+
+# SQL Server Authentication (LOCAL PC)
+
+$myServer = ".\SQLSERVER2012"; 
+$myUser   = "sa"; 
+$myPass   = "********";
+$databaseName = "sanidb";
+
+$connectionInfo = array( "UID"=>$myUser,                            
+                         "PWD"=>$myPass,                            
+                         "Database"=>$databaseName); 
+
+$conn = sqlsrv_connect( $myServer, $connectionInfo);  
+$tsql = "SELECT* FROM dbo.tbl_users";  
+$stmt = sqlsrv_query( $conn, $tsql);  
+
+if ( $stmt )  
+{  
+     echo "Statement executed.<br>\n";  
+}   
+else   
+{  
+     echo "Error in statement execution.\n";  
+     die( print_r( sqlsrv_errors(), true));  
+} 
+
+while( $row = sqlsrv_fetch_array( $stmt, SQLSRV_FETCH_NUMERIC))  
+{  
+     echo "id: ".$row[0]."\n";  
+     echo "name: ".$row[1]."\n";  
+    // echo "Col3: ".$row[2]."<br>\n";  
+     echo "-----------------<br>\n";  
+}  
+sqlsrv_free_stmt( $stmt);  
+sqlsrv_close( $conn);
+
+
+
+
+///////////////////////////////////////////////////////////
+
+# REMOTE DESKTOP CONNECTION
+
+$myServer = "REMOTE_SERVER_IP_ADDRESS";
+$myUser   = "DATABASE_USERNAME";
+$myPass   = "DATABASE_PASSWORD";
+
+$databaseName 	  = "DATABASE_NAME";
+
+
+$connectionInfo = array( "UID"=>$myUser,                            
+                         "PWD"=>$myPass,                            
+                         "Database"=>$databaseName); 
+
+
+$conn = sqlsrv_connect( $myServer, $connectionInfo);  
+if( $conn ) {
+     echo "Connection established.<br />";
+}else{
+     echo "Connection could not be established.<br /><pre>";
+     die( print_r( sqlsrv_errors(), true));
+}
+$tsql = "SELECT * FROM dbo.TABLE_NAME";  
+$stmt = sqlsrv_query( $conn, $tsql);  
+
+if ( $stmt )  
+{  
+     echo "Statement executed.<br>\n";  
+}   
+else   
+{  
+     echo "Error in statement execution.\n";  
+     die( print_r( sqlsrv_errors(), true));  
+} 
+
+while( $row = sqlsrv_fetch_array( $stmt, SQLSRV_FETCH_NUMERIC))  
+{  
+     echo "id: ".$row[0]."\n";  
+     echo "name: ".$row[1]."\n";  
+    
+}  
+
+///* Free statement and connection resources. */  
+//sqlsrv_free_stmt( $stmt);  
+sqlsrv_close( $conn); 
