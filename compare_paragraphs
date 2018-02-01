@@ -1,0 +1,65 @@
+Compare two paragraphs to find difference
+
+<form method="post" action="">
+    <label>Paragraph 1</label>
+    <textarea name="paragraph1" style="width:100%" rows="5">The oldest classical Greek and Latin writing had little or no sani space between words and could be written in boustrophedon alternating directions. Over time, text direction (left to right) became standardized, and word dividers and terminal punctuation became common. The first way to divide sentences into groups was the original paragraphos, similar to an underscore at the beginning of the new group. The Greek paragraphos evolved into the pilcrow, which in English manuscripts in the Middle Ages can be seen inserted inline between sentences. The hedera leaf has also been used in the same way.</textarea>
+    <br /><br />
+    <label>Paragraph 2</label>
+    <textarea name="paragraph2"  style="width:100%" rows="5">The oldest classical Greek and Latin writing had little or no hyne space between words and could be written in boustrophedon alternating directions. Over time, text direction (left to right) became standardized, and word dividers and terminal punctuation became common. The first way to divide sentences into groups was the original paragraphos, similar to an underscore at the beginning of the new group. The British paragraphos evolved into the pilcrow, which in Arabic manuscripts in the Middle Ages can be seen inserted inline between sentences. The hedera leaf has also been used in the same way.</textarea>
+    <br /><br />
+    <input type="submit" value="Search" />
+</form>
+<?php
+if(isset($_REQUEST['paragraph1']) && isset($_REQUEST['paragraph2']))
+{
+	$firstText = $_REQUEST['paragraph1'];
+	$secondText= $_REQUEST['paragraph2'];
+	
+	$result = compare2paragraphs($firstText,$secondText);
+
+	echo $result[0];
+	echo "<br /><br />";
+	echo $result[1];
+}
+
+
+
+function compare2paragraphs($firstText,$secondText)
+{
+	$p1        = str_word_count($firstText, 1);
+	$p2        = str_word_count($secondText, 1);
+	
+	$totalP1 = count($p1);
+	$totalP2 = count($p2);
+	
+	//echo $totalP1." = ".$totalP2;
+	$maxLoop = 0;
+	if($totalP1 > $totalP2)
+	{
+		$maxLoop = $totalP1;
+	}else{
+			$maxLoop = $totalP2;
+		 }
+	
+	$string1 = "";
+	$string2 = "";
+	
+	for($i=0; $i<=$maxLoop; $i++)
+	{
+		$word1 = (isset($p1[$i])? $p1[$i]:"");
+		$word2 = (isset($p2[$i])? $p2[$i]:"");
+		
+		if($word1 != $word2)
+		{
+			$string1 .= "<span style='background-color: #FFFF00'>".$word1."</span> ";
+			$string2 .= "<span style='background-color: #FFFF00'>".$word2."</span> ";
+		}else{
+				$string1 .= "".$word1." ";
+				$string2 .= "".$word2." ";
+			 }
+		
+	}
+
+	return array($string1,$string2);
+}
+?>
