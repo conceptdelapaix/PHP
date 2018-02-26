@@ -1,0 +1,156 @@
+//SANI: This scripts tells how long before you did this action
+
+date_default_timezone_set("Asia/Karachi");
+echo date('Y-m-d H:i:s'); echo "<br />";
+echo $date = "1951-01-24 11:25:00"; echo '<br />';
+
+echo seconds_ago($date);
+
+function seconds_ago($date)
+{
+	$secondsOfPostedDate   	= strtotime($date);
+	$secondsOfCurrentdDate 	= strtotime(date("Y-m-d H:i:s"));
+	$seconds 				= $secondsOfCurrentdDate-$secondsOfPostedDate;
+	$seconds 				= (int)$seconds;
+	$string  				= "";
+	$oneMinute              = 60;               //SANI: Seconds,     1 Min = 60 Sec
+	$oneHour                = $oneMinute*60;    //SANI: 60 Min = 60 x 60 = 3600 Sec = 1 Hour
+	$oneDay                 = ($oneHour*24);    //SANI: 1 hr = 60 Min, 24 Hr = 60*24 = 1140 Min, 1 Day = 1140*60 = 86400 Sec
+	$oneWeek                = $oneDay*7;       //SANI: 1 day = 86400 sec, 7 days = 86400 x 7 = 604800 Sec = 1 week
+	$oneMonth               = $oneDay*(cal_days_in_month(CAL_GREGORIAN, date('m', $secondsOfPostedDate), date('Y', $secondsOfPostedDate))); 
+	$oneYear                = $oneMonth*12;    //SANI: 1 Month = 2630880 sec, 12 Months = 2630880 x 12 = 31570560 Sec = 1 Year
+	$oneDecade              = $oneYear*10;
+	$century                = $oneDecade*10;
+	
+	
+	if(abs($seconds) && $seconds > 0 && $seconds <= 5)
+	{
+		$string = "Just now";
+	}elseif(abs($seconds) && $seconds > 5 && $seconds < $oneMinute)          //SANI: 60 Sec = 1 Minute
+	     {
+		 	$string = $seconds." sec ago";
+		 }elseif(abs($seconds) && $seconds >= $oneMinute && $seconds < $oneHour)  //SANI: 3600 Sec = 60 x 60 = 1 Hour = (Minutes x Seconds)
+		      {
+			  	$minutesFrictions = ($seconds/$oneMinute);
+				$minutes          = (int)$minutesFrictions;
+				$second           = ($seconds%$oneMinute);
+				
+			  	$string  		  = $minutes." minutes ".$second." sec ago";
+				
+			  }elseif(abs($seconds) && $seconds >= $oneHour && $seconds < $oneDay)  //SANI: 86400 = ((60*60)*24) =     1  Day = ((Minutes x Seconds) x hour)
+			       {   
+				   		$hoursFrictions 	= $seconds/$oneHour;
+						$hours  			= (int)$hoursFrictions;
+						$minutes 			=  $seconds%$oneHour;
+						    //SANI: For Hours
+							$minutesFrictions 	= ($minutes/$oneMinute);
+							$minute 			= (int)$minutesFrictions;
+							$second 			= ($minutes%$oneMinute);
+						
+						$string  		    = $hours." Hour ".$minute." minutes ".$second." sec ago";
+						
+				   }elseif(abs($seconds) && $seconds >= $oneDay && $seconds < $oneWeek)  //SANI: 1 Week = (((Minutes x Seconds) x hour) x Days)
+				        {   //SANI: For Days
+							$daysFrictions = $seconds/$oneDay;
+							$days          = (int)$daysFrictions;
+							$hours         = $seconds%$oneDay;
+								//SANI: For Hours
+								$hoursFrictions 	= $hours/$oneHour;
+								$hour  				= (int)$hoursFrictions;
+								$minutes 			=  $hours%$oneHour;
+									//SANI: For Minutes
+									$minutesFrictions 	= $minutes/$oneMinute;
+									$minute				= (int)$minutesFrictions;
+									$second 			=  $minutes%$oneMinute;
+								
+							
+							$string  		    = $days." Days ".$hour." Hours ".$minute." minutes ".$second." sec ago";
+						}elseif(abs($seconds) && $seconds >= $oneWeek && $seconds < $oneMonth)  //SANI: 1 Month = ((((Minutes x Seconds) x hour) x Days) X week)
+								{   
+									//SANI: For Days
+									$MonthsFrictions = $seconds/$oneWeek;
+									$Weeks         	 = (int)$MonthsFrictions;
+									$Day           	 = $seconds%$oneWeek;
+									
+										//SANI: For Days
+										$daysFrictions = $Day/$oneDay;
+										$days          = (int)$daysFrictions;
+										$hours         = $Day%$oneDay;
+											//SANI: For Hours
+											$hoursFrictions 	= $hours/$oneHour;
+											$hour  				= (int)$hoursFrictions;
+											$minutes 			=  $hours%$oneHour;
+												//SANI: For Minutes
+												$minutesFrictions 	= $minutes/$oneMinute;
+												$minute				= (int)$minutesFrictions;
+												$second 			=  $minutes%$oneMinute;
+										
+									
+									$string  		    = $Weeks." Weeks ".$days." Days ".$hour." Hours ".$minute." minutes ".$second." sec ago";
+									
+								}elseif(abs($seconds) && $seconds >= $oneMonth && $seconds < $oneYear)  //SANI: 1 Year = (((((Minutes x Seconds) x hour) x Days) X week)) x Months
+									{   
+										//SANI: For Month
+										$yearsFrictions  = $seconds/$oneMonth;
+										$Months        	 = (int)$yearsFrictions;
+										$Week          	 = $seconds%$oneMonth;
+										
+											//SANI: For Days
+											$MonthsFrictions = $Week/$oneWeek;
+											$Weeks         	 = (int)$MonthsFrictions;
+											$Day           	 = $Week%$oneWeek;
+											
+												//SANI: For Days
+												$daysFrictions = $Day/$oneDay;
+												$days          = (int)$daysFrictions;
+												$hours         = $Day%$oneDay;
+													//SANI: For Hours
+													$hoursFrictions 	= $hours/$oneHour;
+													$hour  				= (int)$hoursFrictions;
+													$minutes 			=  $hours%$oneHour;
+														//SANI: For Minutes
+														$minutesFrictions 	= $minutes/$oneMinute;
+														$minute				= (int)$minutesFrictions;
+														$second 			=  $minutes%$oneMinute;
+											
+										
+										$string  		    = $Months." Months ".$Weeks." Weeks ".$days." Days ".$hour." Hours ".$minute." minutes ".$second." sec ago";
+										
+									}elseif(abs($seconds) && $seconds >= $oneYear && $seconds < $century) 
+									{   
+										//SANI: For Month
+										$decadeFrictions = $seconds/$oneYear;
+										$Years        	 = (int)$decadeFrictions;
+										$Month         	 = $seconds%$oneYear;
+										
+											//SANI: For Month
+											$yearsFrictions  = $Month/$oneMonth;
+											$Months        	 = (int)$yearsFrictions;
+											$Week          	 = $Month%$oneMonth;
+											
+												//SANI: For Days
+												$MonthsFrictions = $Week/$oneWeek;
+												$Weeks         	 = (int)$MonthsFrictions;
+												$Day           	 = $Week%$oneWeek;
+												
+													//SANI: For Days
+													$daysFrictions = $Day/$oneDay;
+													$days          = (int)$daysFrictions;
+													$hours         = $Day%$oneDay;
+														//SANI: For Hours
+														$hoursFrictions 	= $hours/$oneHour;
+														$hour  				= (int)$hoursFrictions;
+														$minutes 			=  $hours%$oneHour;
+															//SANI: For Minutes
+															$minutesFrictions 	= $minutes/$oneMinute;
+															$minute				= (int)$minutesFrictions;
+															$second 			=  $minutes%$oneMinute;
+											
+										
+										$string  		    = $Years." Years ".$Months." Months ".$Weeks." Weeks ".$days." Days ".$hour." Hours ".$minute." minutes ".$second." sec ago";
+										
+									}
+	
+	
+	return $string;
+}
