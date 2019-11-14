@@ -1,0 +1,45 @@
+<?php
+
+/////////////////////////////////////
+        $params = array(
+								"A"=>"AAAA",
+								"B"=>"BBBB",
+								); // data u want to post                                                                   
+$data_string = json_encode($params); 
+
+ $basic_auth_username = "username";   
+ $basic_auth_password = "password";                                        
+http_build_query($data);
+ 
+$ch = curl_init(); 
+curl_setopt($ch, CURLOPT_URL, "https://WEBSITE-DOMAIN-NAME");    
+curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 20);
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+curl_setopt($ch, CURLOPT_BINARYTRANSFER,1);
+  
+curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string); 
+curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "GET");                                                                 
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);     
+curl_setopt($ch, CURLOPT_USERPWD, $basic_auth_username.':'.$basic_auth_password);
+curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC); 
+curl_setopt($ch, CURLOPT_HTTPHEADER, array(   
+    'Accept: application/json',
+    'Content-Type: application/json',
+    'SEC-KEY:SANIHYNE')                                                           
+);             
+
+if(curl_exec($ch) === false)
+{
+    echo 'Curl error: ' . curl_error($ch);
+}                                                                                                      
+$errors = curl_error($ch);                                                                                                            
+$result = curl_exec($ch);
+$returnCode = (int)curl_getinfo($ch, CURLINFO_HTTP_CODE);
+curl_close($ch);  
+echo $returnCode;
+var_dump($errors);
+print_r(json_decode($result, true));
+
+
+?>
