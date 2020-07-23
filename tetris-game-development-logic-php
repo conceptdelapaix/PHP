@@ -1,0 +1,413 @@
+<?php
+//SANI: Tetris calss
+class Tetris
+{
+	//SANI: declaring variables
+	private $rows;
+	private $columns;
+	//SANI: all objects of tetris like I, O, T, S, Z, J, and L
+	private $I_tetriminos;
+	private $O_tetriminos;
+	private $T_tetriminos;
+	private $S_tetriminos;
+	private $Z_tetriminos;
+	private $J_tetriminos;
+	private $L_tetriminos;
+
+	private $grid_fill;
+	private $tetriminos_color;
+
+	private $total_rows;
+	private $total_columns;
+	
+
+	private $board 		= array();
+
+	function __construct()
+	{
+		//SANI: Inrialization of some variables
+		$this->rows 			= 16; //SANI: tetris grid rows
+		$this->columns 			= 10; //SANI: tetris grid columns
+
+		$this->grid_fill 		= "0";
+		$this->tetriminos_color = "1";
+
+		$this->I_tetriminos 	= $this->tetriminos_i(); //SANI: Creating i
+		$this->O_tetriminos 	= $this->tetriminos_o(); //SANI: Creating o
+		$this->T_tetriminos		= $this->tetriminos_t(); //SANI: Creating t
+
+		
+
+		$this->total_rows		= 1;
+		$this->total_columns	= 1;
+
+	}
+
+	//SANI: I object 
+	public function tetriminos_i()
+	{
+		$tetriminos = array();
+		// ----
+		$eighty_degree = array();	
+		for($i=0; $i<=0; $i++)
+		{
+			for($j=0; $j<4; $j++)
+			{	
+				$eighty_degree[$i][$j] = $this->tetriminos_color;
+			}
+		}
+		//$this->sani($eighty_degree); die();
+		$tetriminos[0] = $eighty_degree;
+
+		// -
+		// -
+		// -
+		// -   
+		$ninety_degree = array();	
+		for($i=0; $i<4; $i++)
+		{
+			for($j=0; $j<=0; $j++)
+			{
+				$ninety_degree[$i][$j] = $this->tetriminos_color;
+			}
+		}
+		//$this->sani($ninety_degree); die();
+		$tetriminos[1] = $ninety_degree;
+
+		return $tetriminos;
+	}
+
+	//SANI: O object 
+	private function tetriminos_o()
+	{
+		$tetriminos = array();
+		//  -
+		// | |
+		//  -
+		$zero_degree = array();	
+		for($i=0; $i<=1; $i++)
+		{
+			for($j=0; $j<=1; $j++)
+			{
+				$zero_degree[$i][$j] = $this->tetriminos_color;
+			}
+		}
+
+		$tetriminos[0] = $zero_degree;
+
+		return $tetriminos;
+	}
+
+	//SANI: T object 
+	private function tetriminos_t()
+	{
+		$tetriminos = array();
+		//  -
+		// --
+		//  -
+		$zero_degree = array();	
+		for($i=0; $i<=1; $i++)
+		{
+			for($j=0; $j<=2; $j++)
+			{
+				if($i==0 && $j==1)
+					$zero_degree[$i][$j] = $this->tetriminos_color;
+				else if($i==1)
+					$zero_degree[$i][$j] = $this->tetriminos_color;
+				else
+					$zero_degree[$i][$j] = $this->grid_fill;
+			}
+		}
+		//$this->sani($zero_degree); die();
+		$tetriminos[0] = $zero_degree;
+
+		//  -
+		// ---
+		
+		$ninety_degree = array();	
+		for($i=0; $i<=2; $i++)
+		{
+			for($j=0; $j<=1; $j++)
+			{
+				if($j==1)
+					$ninety_degree[$i][$j] = $this->tetriminos_color;
+				else if($i==1)
+					$ninety_degree[$i][$j] = $this->tetriminos_color;
+				else
+					$ninety_degree[$i][$j] = $this->grid_fill;
+			}
+		}
+		//$this->sani($ninety_degree); die();
+		$tetriminos[1] = $ninety_degree;
+
+
+		
+		//  -
+		//  --
+		//  -
+		$oneeight_degree = array();	
+		for($i=0; $i<=1; $i++)
+		{
+			for($j=0; $j<=2; $j++)
+			{
+				if($i==1 && $j==1)
+					$oneeight_degree[$i][$j] = $this->tetriminos_color;
+				else if($i==0)
+					$oneeight_degree[$i][$j] = $this->tetriminos_color;
+				else
+					$oneeight_degree[$i][$j] = $this->grid_fill;
+			}
+		}
+		//$this->sani($oneeight_degree); die();
+		$tetriminos[2] = $oneeight_degree;
+
+		// ---
+		//  -
+		
+		$threesixty_degree = array();	
+		for($i=0; $i<=2; $i++)
+		{
+			for($j=0; $j<=1; $j++)
+			{
+				if($j==0)
+					$threesixty_degree[$i][$j] = $this->tetriminos_color;
+				else if($i==1)
+					$threesixty_degree[$i][$j] = $this->tetriminos_color;
+				else
+					$threesixty_degree[$i][$j] = $this->grid_fill;
+			}
+		}
+		//$this->sani($ninety_degree); die();
+		$tetriminos[3] = $threesixty_degree;
+
+		return $tetriminos;
+	}
+
+	//SANI: Create tetris grid
+	public function create_grid()
+	{
+		for($i=0; $i<= $this->rows; $i++)
+		{
+			for($j=0; $j<=$this->columns; $j++)
+			{
+				$this->board[$i][$j] = $this->grid_fill;	
+			}
+			
+		}
+
+		return $this->board;
+	}
+
+	//SANI: Add I object in tetris grid
+	public function fill_grid_i($start_x = 0,$start_y = 0, $shape = 0)
+	{   
+		if(isset($this->board[$start_x]) && isset($this->board[$start_x+4]))
+		{ 
+			if(isset($this->board[$start_x][$start_y]) && isset($this->board[$start_x][$start_y+4]))
+			{ 
+				$I = $this->I_tetriminos;
+				//return $I[$shape];
+				$array_size = $this->rowsNcolumns($I[$shape]);
+
+				for($i=0; $i< $array_size["total_columns"]; $i++)
+				{
+					for($j=0; $j< $array_size["total_rows"]; $j++)
+					{
+						$this->board[$start_x+$i][$start_y+$j] = $this->tetriminos_color;
+					}
+				}
+
+			}
+		}
+		//$this->sani($this->board);
+	}
+
+	//SANI: Add O object in tetris grid
+	public function fill_grid_o($start_x = 0,$start_y = 0, $shape = 0)
+	{   
+		if(isset($this->board[$start_x]) && isset($this->board[$start_x+4]))
+		{ 
+			if(isset($this->board[$start_x][$start_y]) && isset($this->board[$start_x][$start_y+4]))
+			{ 
+				$I = $this->O_tetriminos;
+
+				//return $I[$shape];
+				$array_size = $this->rowsNcolumns($I[$shape]);
+//$this->sani($array_size);
+				for($i=0; $i< $array_size["total_columns"]; $i++)
+				{
+					for($j=0; $j< $array_size["total_rows"]; $j++)
+					{
+						$this->board[$start_x+$i][$start_y+$j] = $this->tetriminos_color;
+					}
+				}
+
+			}
+		}
+		//$this->sani($this->board);
+	}
+
+	//SANI: Add t object in tetris grid
+	public function fill_grid_t($start_x = 0,$start_y = 0, $shape = 0)
+	{   
+		if(isset($this->board[$start_x]) && isset($this->board[$start_x+4]))
+		{ 
+			if(isset($this->board[$start_x][$start_y]) && isset($this->board[$start_x][$start_y+4]))
+			{ 
+				$I = $this->T_tetriminos;
+//$this->sani($I[$shape]);
+				//return $I[$shape];
+				$array_size = $this->rowsNcolumns($I[$shape]);
+//$this->sani($array_size); die();
+				for($i=0; $i< $array_size["total_columns"]; $i++)
+				{
+					for($j=0; $j< $array_size["total_rows"]; $j++)
+					{
+						$this->board[$start_x+$i][$start_y+$j] = $I[$shape][$j][$i];
+					}
+				}
+
+			}
+		}
+		//$this->sani($this->board);
+	}
+
+
+
+	//show_grid($board);
+	//SANI: Show tetris grid on web page
+	public function show_grid()
+	{
+		//echo "<pre>"; print_r($board); echo "</pre>"; 
+		$string  = '<table border=1>';
+			for($row=0; $row<= $this->rows; $row++)
+			{
+				$string  .= '<tr>';
+				for($cols=0; $cols<=$this->columns; $cols++)
+				{
+					$string  .= '<td>';
+					$string  .= $this->board[$row][$cols];
+					$string  .= '</td>';	
+				}
+				$string  .= '</tr>';
+			}
+			
+			
+		$string .= '</table>';
+
+		return $string;
+	}
+
+	//SANI: Replace objects bits into tetris grid
+	private function replace_bits($small_array = array(), $start_index, $end_index)
+	{	
+		if(is_array($small_array) || is_object($small_array))
+		{
+			foreach($small_array as $sm)
+			{
+				if(is_array($sm) || is_object($sm))
+				{
+					$this->replace_bits($sm, $start_index, $end_index);
+				}else{
+							$this->board[$start_index][$end_index] = $sm;
+//echo "<br />".$start_index." ".$end_index." ".$sm;
+							$start_index++;
+						    $end_index++;
+						    
+				     }
+			}
+		}
+	}
+
+	//SANI: Show i
+	private function show_i()
+	{
+		return $this->I_tetriminos[rand(0,1)];
+	}
+
+	//SANI: Show o
+	private function show_o()
+	{
+		return $this->O_tetriminos[0];
+	}
+
+	//SANI: Show t
+	private function show_t()
+	{
+		return $this->T_tetriminos[rand(0,3)];
+	}
+
+	//SANI: Print array 
+	function sani($variable)
+	{
+		if(isset($variable) && (is_array($variable) || is_object($variable)))
+		{
+			echo "<pre>"; print_r($variable); echo "</pre>";
+		}else{
+				echo $variable;
+			 }
+	}
+
+	//SANI: Get how many rows and columns has an array
+	function rowsNcolumns($actual_array = array())
+	{
+		if(is_array($actual_array) || is_object($actual_array))
+		{
+			$total_size    = count( $actual_array,1 )-count( $actual_array );
+			$total_rows    = count( $actual_array );
+			$total_columns = max( array_map('count', $actual_array) );
+		}
+
+		return array("total_rows" 	  => $total_rows, 
+			         "total_columns"  => $total_columns,
+			         "total_elements" => $total_size
+	                );
+	}
+
+}
+
+/////////////////////////// SANI: Use of tetris class ///////////////////
+$t = new Tetris(); //SANI: Get class object
+
+$t->create_grid(); //SANI: create grid
+
+$t->sani($t->show_grid()); //SANI: Show grid
+
+//SANI: I moving down
+for($i = 0; $i <= 12; $i++)
+{
+	echo "<br />";
+	$t->create_grid();
+	//$t->sani($t->fill_grid_i($i,0,1));
+	//$t->sani($t->fill_grid_o($i,0,0));
+	$t->sani($t->fill_grid_t($i,0,3));
+	$t->sani($t->show_grid());
+}
+
+//$t->sani($t->show_i());
+//$t->sani($t->show_o());
+
+/*
+function count_nested_array_keys(array &$a, array &$res=array()) {
+    $i = 0;
+    foreach ($a as $key=>$value) {
+        if (is_array($value)) {
+             $i += count_nested_array_keys($value, &$res);
+        }
+        else {
+             if (!isset($res[$key]) $res[$key] = 0;
+
+             $res[$key]++;
+             $i++;
+        }
+    }
+    return $i;
+}
+
+$total_item_count = count_nested_array_keys($deeply_nested, $count_per_key);
+
+echo "total count of items: ", $total_item_count, "\n";
+echo "count per key: ", print_r($count_per_key, 1), "\n";
+
+*/
+?>
